@@ -1,0 +1,149 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(
+    const FriendlyChatApp(),
+  );
+}
+String _name = "Your Name"; // there is something that happen now a time. even though i do not know
+// what happen i feel something that have seen not before 
+class ChatMessage extends StatelessWidget {
+  const ChatMessage({required this.text, required this.animationController});
+  final String text;
+  final AnimationController animationController; // what I have is what you think
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin: const EdgeInsets.only(right: 16.0),
+            child: CircleAvatar(
+              child: Text(_name[0]),
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(_name, style: Theme.of(context).textTheme.headline4,),
+              Container(
+                margin: const EdgeInsets.only(top: 5.0),
+                child: Text(text),
+              )
+            ],
+          )
+        ],
+      ),
+      
+    );
+  }
+}
+
+class FriendlyChatApp extends StatelessWidget {
+  const FriendlyChatApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'FriendlyChat',
+      home: ChatScreen(),
+    );
+  }
+}
+
+
+class ChatScreen extends StatefulWidget {
+  @override
+  _ChatScreenState createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin{
+  final List<ChatMessage> _message = [];
+  final _textController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+  //final String text;
+
+  void _handleSubmitted(String text) {
+    _textController.clear();
+    ChatMessage message = ChatMessage(
+          text: text,
+          animationController: AnimationController(
+            duration: const Duration(milliseconds: 700),
+            vsync: this
+
+          ),
+
+    );
+    setState(() {
+      _message.insert(0, message);
+    });
+    _focusNode.requestFocus();
+  }
+ // widget are the basic building block of flutter UI
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Friends Chat')),
+      body: Column(
+        children: [
+          Flexible(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(8.0),
+              reverse: true,
+              itemBuilder: (_, index) => _message[index],
+              itemCount: _message.length,
+            )
+          ),
+          Divider(height: 1.0,),
+          Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+            ),
+            child: _buildTextComposer(),
+            // this means something happen in second time. this allows something in second time and to pass the test
+            // do you understand what I am saying. this bootable option to test the 
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTextComposer() {
+    //String _Name  = "Your Name";
+    //double height = MediaQuery.of(context).size.height;
+    // this means there is something happen in second time this allow them 
+
+    
+    return IconTheme(
+      data:IconThemeData(color: Theme.of(context).accentColor),
+      
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 2.0 ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Flexible(
+              child: TextField(
+                controller: _textController,
+                onSubmitted: _handleSubmitted,
+                decoration: InputDecoration.collapsed(hintText: 'Send a Message'),
+                focusNode: _focusNode,
+              )
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: IconButton(
+                icon: const Icon(Icons.send),
+                onPressed: () => _handleSubmitted(_textController.text),
+                ),
+            )
+          ],
+        ),
+      ),
+
+    );
+  
+}
+}
